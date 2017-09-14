@@ -115,6 +115,12 @@ public class HuffApp {
 	private void makeCodeTable(HuffNode huffNode, String bc)
 	{		
 		//hint, this will be a recursive method
+
+		if(huffNode.leftChild != null) {
+
+        } else if(huffNode.rightChild != null){
+
+        }
 	}
 	
 	private void displayCodeTable()
