@@ -38,8 +38,7 @@ public class HuffApp {
 		displayFrequencyTable();
 		addToQueue();
 		buildTree(theQueue);
-		//when the following method is implemented, remove the "//", so it executes
-		//makeCodeTable(huffTree.root, "");  						
+		makeCodeTable(huffTree.root, "");
 		encode();
 		displayEncodedMessage();
 		displayCodeTable();
@@ -122,21 +121,36 @@ public class HuffApp {
          */
         //Checking if there is a left child for traversal
 		if(huffNode.leftChild != null) {
-
+		    bc += "0";
+            makeCodeTable(huffNode.leftChild, bc);
         }
         //Checks if there is a right child for traversal
         else if(huffNode.rightChild != null){
-
+            bc += "1";
+            makeCodeTable(huffNode.rightChild, bc);
         }
         //If no children, then it is a character
         else {
-
+            //Get the character of the node
+            char letter = huffNode.character;
+            //Find what spot in the array that is
+            int spot = (int) letter;
+            //Put the byte code into the array, at the proper location
+            codeTable[spot] = bc;
         }
 	}
 	
 	private void displayCodeTable()
 	{	
 		//print code table, skipping any empty elements
+        System.out.println("Code Table\nchar | val");
+
+        for(int i = 0; i < ASCII_TABLE_SIZE; i++) {
+            if (!codeTable[i].equals("")) {
+                System.out.printf("%c\t | %s\n", (char)i, codeTable[i]);
+            }
+        }
+        System.out.println();
 	}
 
 
