@@ -116,9 +116,20 @@ public class HuffApp {
 	{		
 		//hint, this will be a recursive method
 
+        /**
+         * Reads down the tree from left to right, counting its value's until it hits nodes
+         * with no children.  Then it reads the char and records the path to the code table
+         */
+        //Checking if there is a left child for traversal
 		if(huffNode.leftChild != null) {
 
-        } else if(huffNode.rightChild != null){
+        }
+        //Checks if there is a right child for traversal
+        else if(huffNode.rightChild != null){
+
+        }
+        //If no children, then it is a character
+        else {
 
         }
 	}
