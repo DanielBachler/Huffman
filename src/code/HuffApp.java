@@ -127,7 +127,9 @@ public class HuffApp {
 	{	
 		//print code table, skipping any empty elements
 	}
-	
+
+
+	//If you could do the rest of these that would be great
 	private void encode()                   
 	{		
 		//use the code table to encode originalMessage. Save result in the encodedMessage field
