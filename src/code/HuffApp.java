@@ -31,6 +31,9 @@ public class HuffApp {
 	
 	public HuffApp() {
 		codeTable = new String[ASCII_TABLE_SIZE];
+		for(int i = 0; i < ASCII_TABLE_SIZE; i++) {
+		    codeTable[i] = "";
+        }
 		freqTable = new int[ASCII_TABLE_SIZE];
 		readInput();
 		displayOriginalMessage();
@@ -67,7 +70,8 @@ public class HuffApp {
 		//populate the frequency table using inputString. results are saved to the 
 		//freqTable field
         for(int i = 0; i < inputString.length(); i++) {
-            freqTable[(int)inputString.charAt(i)]++;
+            int temp = inputString.charAt(i);
+            freqTable[temp]++;
         }
 	}
 	
@@ -87,9 +91,11 @@ public class HuffApp {
 	{
 		//add the values in the frequency table to the PriorityQueue. Hint use the 
 		//PriorityQ class. save the results to theQueue field
-        for(int i = 0; i < freqTable.length; i++) {
+        theQueue = new PriorityQ(originalMessage.length()*4);
+        for(int i = 0; i < ASCII_TABLE_SIZE; i++) {
             if(freqTable[i] != 0) {
-                theQueue.insert(new HuffTree((char)i, freqTable[i]));
+            	HuffTree temp = new HuffTree((char)i, freqTable[i]);
+                theQueue.insert(temp);
             }
         }
 	}
@@ -102,7 +108,7 @@ public class HuffApp {
         HuffTree temp2 = hufflist.remove();
         HuffTree start = new HuffTree(temp1.getWeight() + temp2.getWeight(), temp1, temp2);
         hufflist.insert(start);
-        while(hufflist.getSize() < 2) {
+        while(hufflist.getSize() > 1) {
             temp1 = hufflist.remove();
             temp2 = hufflist.remove();
             HuffTree temp3 = new HuffTree(temp1.getWeight() + temp2.getWeight(), temp1, temp2);
@@ -125,12 +131,12 @@ public class HuffApp {
             makeCodeTable(huffNode.leftChild, bc);
         }
         //Checks if there is a right child for traversal
-        else if(huffNode.rightChild != null){
+        if(huffNode.rightChild != null){
             bc += "1";
             makeCodeTable(huffNode.rightChild, bc);
         }
         //If no children, then it is a character
-        else {
+        if(huffNode.rightChild == null && huffNode.rightChild == null) {
             //Get the character of the node
             char letter = huffNode.character;
             //Find what spot in the array that is
