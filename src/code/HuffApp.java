@@ -53,10 +53,10 @@ public class HuffApp {
 		//read input in from the input.txt file and save to originalMessage	field
         try {
             Scanner textInput = new Scanner(new File("input.txt"));
-            while(textInput.hasNextLine()) {
+            while (textInput.hasNextLine()) {
                 originalMessage += textInput.nextLine();
             }
-        } catch(FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             System.out.println("Unable to open input file.");
         }
 	}
@@ -73,15 +73,14 @@ public class HuffApp {
             int temp = inputString.charAt(i);
             freqTable[temp]++;
         }
-	}
-	
-	private void displayFrequencyTable()
-	{	
-		//print the frequency table. skipping any elements that are not represented
+    }
+
+    private void displayFrequencyTable() {
+        //print the frequency table. skipping any elements that are not represented
         System.out.println("Frequency Table\nchar | val");
-        for(int i = 0; i < ASCII_TABLE_SIZE; i++) {
+        for (int i = 0; i < ASCII_TABLE_SIZE; i++) {
             if (freqTable[i] != 0) {
-                System.out.printf("%c\t | %d\n", (char)i, freqTable[i]);
+                System.out.printf("%c\t | %d\n", (char) i, freqTable[i]);
             }
         }
         System.out.println();
@@ -98,12 +97,11 @@ public class HuffApp {
                 theQueue.insert(temp);
             }
         }
-	}
-	
-	private void buildTree(PriorityQ hufflist) 
-	{
-		//pull items from the priority queue and combine them to form 
-		//a HuffTree. Save the results to the huffTree field
+    }
+
+    private void buildTree(PriorityQ hufflist) {
+        //pull items from the priority queue and combine them to form
+        //a HuffTree. Save the results to the huffTree field
         HuffTree temp1 = hufflist.remove();
         HuffTree temp2 = hufflist.remove();
         HuffTree start = new HuffTree(temp1.getWeight() + temp2.getWeight(), temp1, temp2);
@@ -115,13 +113,10 @@ public class HuffApp {
             hufflist.insert(temp3);
         }
         huffTree = hufflist.remove();
-	}
-	
-	private void makeCodeTable(HuffNode huffNode, String bc)
-	{		
-		//hint, this will be a recursive method
+    }
 
-        /**
+    private void makeCodeTable(HuffNode huffNode, String bc) {
+         /**
          * Reads down the tree from left to right, counting its value's until it hits nodes
          * with no children.  Then it reads the char and records the path to the code table
          */
@@ -160,22 +155,40 @@ public class HuffApp {
 	}
 
 
-	//If you could do the rest of these that would be great
-	private void encode()                   
-	{		
-		//use the code table to encode originalMessage. Save result in the encodedMessage field
-	}
+    //If you could do the rest of these that would be great
+    private void encode() {
+        for (int i = 0; i < originalMessage.length(); i++) { //iterates through entire original message
+            System.out.print(codeTable[(int) originalMessage.charAt(i)]); // find the ascii value of the letter and goes to it in the code table then prints binary value
+        }
 
-	private void displayEncodedMessage() {
-		System.out.println("\nEncoded message: " + encodedMessage);		
-	}
+        //use the code table to encode originalMessage. Save result in the encodedMessage field
+    }
 
-	private void decode()
-	{
-		//decode the message and store the result in the decodedMessage field
-	}
-	
-	public void displayDecodedMessage() {
-		System.out.println("Decoded message: " + decodedMessage);
-	}	
-}
+    private void displayEncodedMessage() {
+        System.out.println("\nEncoded message: " + encodedMessage);
+    }
+
+    private void decode() {
+        HuffNode current = huffTree.root; //keeps track of the current node
+
+        for (int i = 0; i < encodedMessage.length(); i++) { //iterates through the entire encoded message
+
+            if(current.leftChild == null && current.rightChild == null) { // if the current node is a leaf it adds it to string decodedmessage
+              decodedMessage = decodedMessage + current.character; // adds to string
+              i--; // if this wasnt here we would skip a number
+              current = huffTree.root; //goes back to root
+            }
+           else if (encodedMessage.charAt(i) == 0) { // if its zero go left
+                current = current.leftChild; // left
+            }
+            else { // if its not a leaf and isnt zeero it must be a one
+                current = current.rightChild; // go right
+            }
+
+        }
+        //decode the message and store the result in the decodedMessage field
+    }
+
+    public void displayDecodedMessage() {
+        System.out.println("Decoded message: " + decodedMessage);
+    }
