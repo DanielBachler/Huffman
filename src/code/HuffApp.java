@@ -31,6 +31,9 @@ public class HuffApp {
 	
 	public HuffApp() {
 		codeTable = new String[ASCII_TABLE_SIZE];
+		for(int i = 0; i < ASCII_TABLE_SIZE; i++) {
+		    codeTable[i] = "";
+        }
 		freqTable = new int[ASCII_TABLE_SIZE];
 		readInput();
 		displayOriginalMessage();
@@ -38,8 +41,7 @@ public class HuffApp {
 		displayFrequencyTable();
 		addToQueue();
 		buildTree(theQueue);
-		//when the following method is implemented, remove the "//", so it executes
-		//makeCodeTable(huffTree.root, "");  						
+		makeCodeTable(huffTree.root, "");
 		encode();
 		displayEncodedMessage();
 		displayCodeTable();
@@ -68,7 +70,8 @@ public class HuffApp {
 		//populate the frequency table using inputString. results are saved to the 
 		//freqTable field
         for(int i = 0; i < inputString.length(); i++) {
-            freqTable[(int)inputString.charAt(i)]++;
+            int temp = inputString.charAt(i);
+            freqTable[temp]++;
         }
 	}
 	
@@ -88,9 +91,11 @@ public class HuffApp {
 	{
 		//add the values in the frequency table to the PriorityQueue. Hint use the 
 		//PriorityQ class. save the results to theQueue field
-        for(int i = 0; i < freqTable.length; i++) {
+        theQueue = new PriorityQ(originalMessage.length()*4);
+        for(int i = 0; i < ASCII_TABLE_SIZE; i++) {
             if(freqTable[i] != 0) {
-                theQueue.insert(new HuffTree((char)i, freqTable[i]));
+            	HuffTree temp = new HuffTree((char)i, freqTable[i]);
+                theQueue.insert(temp);
             }
         }
 	}
@@ -103,7 +108,7 @@ public class HuffApp {
         HuffTree temp2 = hufflist.remove();
         HuffTree start = new HuffTree(temp1.getWeight() + temp2.getWeight(), temp1, temp2);
         hufflist.insert(start);
-        while(hufflist.getSize() < 2) {
+        while(hufflist.getSize() > 1) {
             temp1 = hufflist.remove();
             temp2 = hufflist.remove();
             HuffTree temp3 = new HuffTree(temp1.getWeight() + temp2.getWeight(), temp1, temp2);
@@ -116,16 +121,42 @@ public class HuffApp {
 	{		
 		//hint, this will be a recursive method
 
+        /**
+         * Reads down the tree from left to right, counting its value's until it hits nodes
+         * with no children.  Then it reads the char and records the path to the code table
+         */
+        //Checking if there is a left child for traversal
 		if(huffNode.leftChild != null) {
-
-        } else if(huffNode.rightChild != null){
-
+		    bc += "0";
+            makeCodeTable(huffNode.leftChild, bc);
+        }
+        //Checks if there is a right child for traversal
+        if(huffNode.rightChild != null){
+            bc += "1";
+            makeCodeTable(huffNode.rightChild, bc);
+        }
+        //If no children, then it is a character
+        if(huffNode.rightChild == null && huffNode.rightChild == null) {
+            //Get the character of the node
+            char letter = huffNode.character;
+            //Find what spot in the array that is
+            int spot = (int) letter;
+            //Put the byte code into the array, at the proper location
+            codeTable[spot] = bc;
         }
 	}
 	
 	private void displayCodeTable()
 	{	
 		//print code table, skipping any empty elements
+        System.out.println("Code Table\nchar | val");
+
+        for(int i = 0; i < ASCII_TABLE_SIZE; i++) {
+            if (!codeTable[i].equals("")) {
+                System.out.printf("%c\t | %s\n", (char)i, codeTable[i]);
+            }
+        }
+        System.out.println();
 	}
 
 
