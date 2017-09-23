@@ -1,16 +1,8 @@
 package code;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Stack;
 
 
 public class HuffApp {
@@ -22,6 +14,7 @@ public class HuffApp {
     private String encodedMessage = "";
     private String[] codeTable;
     private String decodedMessage = "";
+    private String bc="";
 
 
     public static void main(String[] args) {
@@ -36,17 +29,17 @@ public class HuffApp {
         }
         freqTable = new int[ASCII_TABLE_SIZE];
         readInput();
-        displayOriginalMessage();
         makeFrequencyTable(originalMessage);
-        displayFrequencyTable();
         addToQueue();
         buildTree(theQueue);
-        makeCodeTable(huffTree.root, "");
+        makeCodeTable(huffTree.root);
         encode();
-        displayEncodedMessage();
-        displayCodeTable();
         decode();
+        displayOriginalMessage();
+        displayFrequencyTable();
+        displayEncodedMessage();
         displayDecodedMessage();
+        displayCodeTable();
     }
 
     private void readInput() {
@@ -100,20 +93,18 @@ public class HuffApp {
     private void buildTree(PriorityQ hufflist) {
         //pull items from the priority queue and combine them to form
         //a HuffTree. Save the results to the huffTree field
-        HuffTree temp1 = hufflist.remove();
-        HuffTree temp2 = hufflist.remove();
-        HuffTree start = new HuffTree(temp1.getWeight() + temp2.getWeight(), temp1, temp2);
-        hufflist.insert(start);
+        HuffTree temp1;
+        HuffTree temp2;
         while (hufflist.getSize() > 1) {
             temp1 = hufflist.remove();
             temp2 = hufflist.remove();
             HuffTree temp3 = new HuffTree(temp1.getWeight() + temp2.getWeight(), temp1, temp2);
             hufflist.insert(temp3);
         }
-        huffTree = hufflist.remove();
+        huffTree = hufflist.peekMin();
     }
 
-    private void makeCodeTable(HuffNode huffNode, String bc) {
+    private void makeCodeTable(HuffNode huffNode) {
         /**
          * Reads down the tree from left to right, counting its value's until it hits nodes
          * with no children.  Then it reads the char and records the path to the code table
@@ -121,12 +112,12 @@ public class HuffApp {
         //Checking if there is a left child for traversal
         if (huffNode.leftChild != null) {
             bc += "0";
-            makeCodeTable(huffNode.leftChild, bc);
+            makeCodeTable(huffNode.leftChild);
         }
         //Checks if there is a right child for traversal
         if (huffNode.rightChild != null) {
             bc += "1";
-            makeCodeTable(huffNode.rightChild, bc);
+            makeCodeTable(huffNode.rightChild);
         }
         //If no children, then it is a character
         if (huffNode.rightChild == null && huffNode.rightChild == null) {
@@ -155,9 +146,8 @@ public class HuffApp {
     //If you could do the rest of these that would be great
     private void encode() {
         for (int i = 0; i < originalMessage.length(); i++) { //iterates through entire original message
-            System.out.print(codeTable[(int) originalMessage.charAt(i)]); // find the ascii value of the letter and goes to it in the code table then prints binary value
+            encodedMessage = encodedMessage.concat(codeTable[(int) originalMessage.charAt(i)]); // find the ascii value of the letter and goes to it in the code table then prints binary value
         }
-
         //use the code table to encode originalMessage. Save result in the encodedMessage field
     }
 
