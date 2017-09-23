@@ -120,13 +120,11 @@ public class HuffApp {
          */
         //Checking if there is a left child for traversal
         if (huffNode.leftChild != null) {
-            bc += "0";
-            makeCodeTable(huffNode.leftChild, bc);
+            makeCodeTable(huffNode.leftChild, bc + "0");
         }
         //Checks if there is a right child for traversal
         if (huffNode.rightChild != null) {
-            bc += "1";
-            makeCodeTable(huffNode.rightChild, bc);
+            makeCodeTable(huffNode.rightChild, bc + "1");
         }
         //If no children, then it is a character
         if (huffNode.rightChild == null && huffNode.rightChild == null) {
