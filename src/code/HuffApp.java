@@ -153,7 +153,8 @@ public class HuffApp {
     //If you could do the rest of these that would be great
     private void encode() {
         for (int i = 0; i < originalMessage.length(); i++) { //iterates through entire original message
-            System.out.print(codeTable[(int) originalMessage.charAt(i)]); // find the ascii value of the letter and goes to it in the code table then prints binary value
+            ///System.out.print(codeTable[(int) originalMessage.charAt(i)]);
+            encodedMessage = encodedMessage + codeTable[(int) originalMessage.charAt(i)];// find the ascii value of the letter and goes to it in the code table then prints binary value
         }
 
         //use the code table to encode originalMessage. Save result in the encodedMessage field
@@ -168,13 +169,24 @@ public class HuffApp {
 
         for (int i = 0; i < encodedMessage.length(); i++) { //iterates through the entire encoded message
 
+            if (i == encodedMessage.length()-1){
+                if (current.rightChild.rightChild == null && current.rightChild.leftChild == null){
+                    decodedMessage = decodedMessage + current.rightChild.character;
+                }
+                else {
+                    decodedMessage = decodedMessage + current.leftChild.character;                }
+            }
             if (current.leftChild == null && current.rightChild == null) { // if the current node is a leaf it adds it to string decodedmessage
                 decodedMessage = decodedMessage + current.character; // adds to string
-                i--; // if this wasnt here we would skip a number
                 current = huffTree.root; //goes back to root
-            } else if (encodedMessage.charAt(i) == 0) { // if its zero go left
+            }
+
+            if (encodedMessage.charAt(i) == '0') { // if its zero go left
                 current = current.leftChild; // left
-            } else { // if its not a leaf and isnt zeero it must be a one
+            }
+
+
+            else { // if its not a leaf and isnt zeero it must be a one
                 current = current.rightChild; // go right
             }
 
@@ -183,6 +195,6 @@ public class HuffApp {
     }
 
     public void displayDecodedMessage() {
-        System.out.println("Decoded message: " + decodedMessage);
+        System.out.println("Decoded message: " + decodedMessage );
     }
 }
