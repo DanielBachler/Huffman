@@ -12,7 +12,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Stack;
 
-
+/**
+ * Daniel Bachler, Nayte Chandler
+ * HuffApp.java
+ */
 public class HuffApp {
     private int[] freqTable;
     private final static int ASCII_TABLE_SIZE = 128;
