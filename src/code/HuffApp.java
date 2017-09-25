@@ -169,12 +169,12 @@ public class HuffApp {
 
         for (int i = 0; i < encodedMessage.length(); i++) { //iterates through the entire encoded message
 
-            if (i == encodedMessage.length()-1){
-                if (current.rightChild.rightChild == null && current.rightChild.leftChild == null){
-                    decodedMessage = decodedMessage + current.rightChild.character;
-                }
-                else {
-                    decodedMessage = decodedMessage + current.leftChild.character;                }
+            if (i == encodedMessage.length() - 1) { //tests to see if we are at last character of encoded message
+                if (encodedMessage.charAt(encodedMessage.length() - 1) == '1') { // if last character equals 1 uses right child
+                    decodedMessage = decodedMessage + current.rightChild.character; // adds right childs character to decoded message
+                } else { //if its not 1 its zero
+                    decodedMessage = decodedMessage + current.leftChild.character; // adds left childs char to decoded message
+                } // if zero uses left child
             }
             if (current.leftChild == null && current.rightChild == null) { // if the current node is a leaf it adds it to string decodedmessage
                 decodedMessage = decodedMessage + current.character; // adds to string
@@ -183,10 +183,7 @@ public class HuffApp {
 
             if (encodedMessage.charAt(i) == '0') { // if its zero go left
                 current = current.leftChild; // left
-            }
-
-
-            else { // if its not a leaf and isnt zeero it must be a one
+            } else { // if its not a leaf and isnt zeero it must be a one
                 current = current.rightChild; // go right
             }
 
@@ -195,6 +192,6 @@ public class HuffApp {
     }
 
     public void displayDecodedMessage() {
-        System.out.println("Decoded message: " + decodedMessage );
+        System.out.println("Decoded message: " + decodedMessage);
     }
 }
